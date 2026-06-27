@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Track Order - Jawad AI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      /* Unified Header */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: #fff;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+      }
+      .top-bar {
+        background: #e8e4e1;
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 45px;
+        font-size: 10px;
+        font-weight: 600;
+      }
+      .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 45px;
+        height: 80px;
+        position: relative;
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 45px;
+        font-weight: 900;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        letter-spacing: -3px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 25px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .user-actions {
+        display: flex;
+        gap: 15px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      /* Tracking Layout */
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background: #fafafa;
+      }
+      .tracking-section {
+        background-color: #fff;
+        padding: 60px 45px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+      }
+      .tracking-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #000;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+      }
+
+      .search-container {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        display: flex;
+        gap: 10px;
+      }
+      .search-input {
+        flex: 1;
+        padding: 15px 20px;
+        border: 1px solid #000;
+        font-size: 14px;
+        outline: none;
+      }
+      .search-btn {
+        background: #000;
+        color: #fff;
+        padding: 0 30px;
+        border: none;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .content-area {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #888;
+        font-size: 14px;
+      }
+      footer {
+        padding: 40px 45px;
+        background: #000;
+        color: white;
+        text-align: center;
+        font-size: 12px;
+        margin-top: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="top-bar">
+        <div>
+          <a href="signin.html">SIGN IN</a> |
+          <a href="tracking.html">TRACKING INFO</a>
+        </div>
+        <div>Step Into the Season - SHOP NOW</div>
+      </div>
+      <div class="main-header">
+        <div class="nav-links">
+          <a href="index.html">WOMEN</a>
+          <a href="index.html">MEN</a>
+        </div>
+        <a href="index.html" class="logo">J.</a>
+        <div class="user-actions">
+          <a href="javascript:void(0)">SEARCH</a>
+          <a href="cart.html">BAG (<span id="cart-count">0</span>)</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="tracking-section">
+      <div class="tracking-title">Track Your Order</div>
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Enter Order ID (e.g., #J-123456)"
+        />
+        <button class="search-btn">Track</button>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <p>Please enter a valid tracking ID to see your order status.</p>
+    </div>
+
+    <footer>
+      <p>© 2026 J. All Rights Reserved | Contact: eshop@junaidjamshed.com</p>
+    </footer>
+
+    <script>
+      function updateBagCounter() {
+        let cart = JSON.parse(localStorage.getItem("j_cart")) || [];
+        document.getElementById("cart-count").innerText = cart.length;
+      }
+      window.addEventListener("load", updateBagCounter);
+    </script>
+  </body>
+</html>

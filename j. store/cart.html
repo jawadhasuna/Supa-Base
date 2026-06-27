@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Cart - Jawad AI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ... Keep your existing CSS styles ... */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: #fff;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+      }
+      .top-bar {
+        background: #e8e4e1;
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 45px;
+        font-size: 10px;
+        font-weight: 600;
+      }
+      .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 45px;
+        height: 80px;
+        position: relative;
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 45px;
+        font-weight: 900;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        letter-spacing: -3px;
+      }
+      .cart-wrapper {
+        display: flex;
+        max-width: 1200px;
+        margin: 40px auto;
+        gap: 40px;
+        padding: 0 20px;
+        min-height: 50vh;
+      }
+      .cart-left {
+        flex: 2;
+      }
+      .cart-header {
+        font-size: 24px;
+        font-weight: bold;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+      .cart-item {
+        display: flex;
+        gap: 20px;
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+        position: relative;
+      }
+      .cart-item img {
+        width: 120px;
+        height: auto;
+        object-fit: cover;
+      }
+      .item-info {
+        flex: 1;
+      }
+      .item-name {
+        font-weight: bold;
+        font-size: 14px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .item-price {
+        position: absolute;
+        right: 0;
+        top: 20px;
+        font-weight: bold;
+        color: #c40000;
+      }
+      .qty-box {
+        display: flex;
+        border: 1px solid #000;
+        width: fit-content;
+        margin-top: 15px;
+      }
+      .qty-box button {
+        background: none;
+        border: none;
+        padding: 5px 12px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .qty-box input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        outline: none;
+        font-weight: bold;
+      }
+      .remove-btn {
+        color: #888;
+        font-size: 11px;
+        text-decoration: underline;
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-top: 15px;
+        text-transform: uppercase;
+      }
+      .cart-right {
+        flex: 1;
+      }
+      .subtotal-box {
+        border: 1px solid #eee;
+        padding: 30px;
+        background: #fafafa;
+      }
+      .subtotal-row {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+      .checkout-btn {
+        background: #000;
+        color: #fff;
+        width: 100%;
+        padding: 18px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="top-bar">
+        <div>
+          <a href="signin.html">SIGN IN</a> |
+          <a href="tracking.html">TRACKING INFO</a>
+        </div>
+      </div>
+      <div class="main-header">
+        <div class="nav-links"><a href="index.html">WOMEN</a></div>
+        <a href="index.html" class="logo">J.</a>
+        <div class="user-actions">
+          <a href="cart.html">BAG (<span id="cart-count">0</span>)</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="cart-wrapper">
+      <div class="cart-left">
+        <div class="cart-header">
+          Your Cart (<span id="items-count">0</span>)
+        </div>
+        <div id="cart-items-list"></div>
+      </div>
+      <div class="cart-right">
+        <div class="subtotal-box">
+          <div class="subtotal-row">
+            <span>SUBTOTAL</span> <span id="total-price">PKR 0</span>
+          </div>
+          <button
+            class="checkout-btn"
+            onclick="window.location.href = 'checkout.html'"
+          >
+            Proceed to Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function renderCartPage() {
+        let cart = JSON.parse(localStorage.getItem("j_cart")) || [];
+        let container = document.getElementById("cart-items-list");
+        let total = 0;
+
+        document.getElementById("cart-count").innerText = cart.length;
+        document.getElementById("items-count").innerText = cart.length;
+
+        if (cart.length === 0) {
+          container.innerHTML = "<h3>Your cart is empty.</h3>";
+          document.getElementById("total-price").innerText = "PKR 0";
+          return;
+        }
+
+        container.innerHTML = cart
+          .map((item, index) => {
+            // FIX: Convert to string first, then remove commas, then parse
+            let rawPrice = String(item.price || "0");
+            let priceValue = parseInt(rawPrice.replace(/,/g, ""));
+            let itemTotal = priceValue * (item.quantity || 1);
+            total += itemTotal;
+
+            return `
+                <div class="cart-item">
+                    <img src="${item.image}">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="qty-box">
+                            <button onclick="updateQty(${index}, -1)">-</button>
+                            <input type="text" value="${item.quantity || 1}" readonly>
+                            <button onclick="updateQty(${index}, 1)">+</button>
+                        </div>
+                        <button class="remove-btn" onclick="removeItem(${index})">REMOVE</button>
+                    </div>
+                    <div class="item-price">PKR ${itemTotal.toLocaleString()}</div>
+                </div>
+            `;
+          })
+          .join("");
+
+        document.getElementById("total-price").innerText =
+          "PKR " + total.toLocaleString();
+      }
+
+      function updateQty(index, change) {
+        let cart = JSON.parse(localStorage.getItem("j_cart")) || [];
+        cart[index].quantity = (cart[index].quantity || 1) + change;
+        if (cart[index].quantity < 1) cart[index].quantity = 1;
+        localStorage.setItem("j_cart", JSON.stringify(cart));
+        renderCartPage();
+      }
+
+      function removeItem(index) {
+        let cart = JSON.parse(localStorage.getItem("j_cart")) || [];
+        cart.splice(index, 1);
+        localStorage.setItem("j_cart", JSON.stringify(cart));
+        renderCartPage();
+      }
+
+      window.onload = renderCartPage;
+    </script>
+  </body>
+</html>

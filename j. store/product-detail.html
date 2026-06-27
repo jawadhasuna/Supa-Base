@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Details - Jawad AI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Keep your existing styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: #fff;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+      }
+      .top-bar {
+        background: #e8e4e1;
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 45px;
+        font-size: 10px;
+        font-weight: 600;
+      }
+      .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 45px;
+        height: 80px;
+        position: relative;
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 45px;
+        font-weight: 900;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        letter-spacing: -3px;
+      }
+      .product-container {
+        display: flex;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+        gap: 40px;
+      }
+      .image-section img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        background: #f7f7f7;
+      }
+      .details-section {
+        flex: 1;
+      }
+      .p-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      .p-price {
+        font-size: 20px;
+        font-weight: bold;
+        color: #c40000;
+        margin-bottom: 25px;
+      }
+      .qty-box {
+        display: flex;
+        align-items: center;
+        border: 1px solid #000;
+        width: fit-content;
+        margin-bottom: 25px;
+      }
+      .qty-box button {
+        background: none;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      .qty-box input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .add-btn {
+        background: #000;
+        color: #fff;
+        width: 100%;
+        padding: 18px;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="top-bar">
+        <div>
+          <a href="signin.html">SIGN IN</a> |
+          <a href="tracking.html">TRACKING INFO</a>
+        </div>
+      </div>
+      <div class="main-header">
+        <div class="nav-links"><a href="index.html">WOMEN</a></div>
+        <div class="logo">J.</div>
+        <div class="user-actions">
+          <a href="cart.html">BAG (<span id="cart-count">0</span>)</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="product-container">
+      <div class="image-section">
+        <img id="p-img" src="images/placeholder.jpg" alt="Product Image" />
+      </div>
+      <div class="details-section">
+        <h1 class="p-title" id="p-name">Loading...</h1>
+        <div class="p-price" id="p-price">PKR 0</div>
+        <div class="qty-box">
+          <button onclick="changeQty(-1)">-</button>
+          <input type="text" id="p-qty" value="1" readonly />
+          <button onclick="changeQty(1)">+</button>
+        </div>
+        <button class="add-btn" onclick="addToCart()">Add to Bag</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      const supabaseClient = supabase.createClient(
+        "https://yymqfmteplwncosqcgko.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5bXFmbXRlcGx3bmNvc3FjZ2tvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMDk2NDMsImV4cCI6MjA5Nzc4NTY0M30.ZRNuE48tuVDSX8B0AQLOzqO4ENoKDFnOnyrAnY0dAqM",
+      );
+
+      let loadedProductName, loadedProductPrice, loadedProductImage;
+
+      // FIX: Added function to sync bag count
+      function updateBagCounter() {
+        let cart = JSON.parse(localStorage.getItem("j_cart")) || [];
+        document.getElementById("cart-count").innerText = cart.length;
+      }
+
+      async function fetchProduct() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get("id");
+        if (!productId) return;
+
+        const { data, error } = await supabaseClient
+          .from("products")
+          .select("*")
+          .eq("id", productId)
+          .single();
+
+        if (data) {
+          loadedProductName = data.name;
+          loadedProductPrice = data.price;
+          loadedProductImage = data.image_url;
+          document.getElementById("p-name").innerText = data.name;
+          document.getElementById("p-price").innerText =
+            "PKR " + data.price.toLocaleString();
+          document.getElementById("p-img").src = data.image_url;
+        }
+      }
+
+      function changeQty(amount) {
+        let qtyInput = document.getElementById("p-qty");
+        let newQty = parseInt(qtyInput.value) + amount;
+        if (newQty >= 1) qtyInput.value = newQty;
+      }
+
+      function addToCart() {
+        let cart = JSON.parse(localStorage.getItem("j_cart")) || [];
+        cart.push({
+          name: loadedProductName,
+          price: loadedProductPrice.toString(),
+          image: loadedProductImage,
+          quantity: parseInt(document.getElementById("p-qty").value),
+        });
+        localStorage.setItem("j_cart", JSON.stringify(cart));
+        window.location.href = "cart.html";
+      }
+
+      // FIX: Run both fetchProduct and updateBagCounter on load
+      window.onload = () => {
+        fetchProduct();
+        updateBagCounter();
+      };
+    </script>
+  </body>
+</html>

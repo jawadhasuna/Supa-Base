@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Corporate Gifts - Jawad AI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      /* Unified Header */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: #fff;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+      }
+      .top-bar {
+        background: #e8e4e1;
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 45px;
+        font-size: 10px;
+        font-weight: 600;
+      }
+      .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 45px;
+        height: 80px;
+        position: relative;
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 45px;
+        font-weight: 900;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        letter-spacing: -3px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 25px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .user-actions {
+        display: flex;
+        gap: 15px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      /* Gifting Content */
+      .promo-bar {
+        background: #eaddc5;
+        text-align: center;
+        padding: 8px;
+        font-size: 11px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .slider-container {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+      }
+      .slides {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
+      }
+      .slide {
+        min-width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        background-size: cover;
+        background-position: center;
+      }
+      .slide-1 {
+        background-image: url("https://gifts.junaidjamshed.com/media/weltpixel/owlcarouselslider/images/e/i/eid-ul-adha-corporate-gifts-web_1.jpg");
+        justify-content: flex-end;
+        padding-right: 10%;
+      }
+      .slide-2 {
+        background-image: url("https://gifts.junaidjamshed.com/media/weltpixel/owlcarouselslider/images/t/h/thoughtfully-curated-gift-sets-web.jpg");
+        justify-content: flex-start;
+        padding-left: 10%;
+      }
+
+      .hero-text h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 60px;
+        font-style: italic;
+        color: #111;
+        line-height: 1;
+      }
+      .hero-text p {
+        font-size: 20px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #111;
+        margin-top: 10px;
+      }
+
+      .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 30px;
+        color: #111;
+        cursor: pointer;
+        padding: 20px;
+        user-select: none;
+        z-index: 10;
+      }
+      .prev {
+        left: 10px;
+      }
+      .next {
+        right: 10px;
+      }
+
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        padding: 60px 45px 30px;
+        text-align: left;
+      }
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        padding: 0 45px 60px;
+      }
+      .product-card img {
+        width: 100%;
+        display: block;
+        border: 1px solid #eee;
+        transition: 0.3s;
+        background: #f7f7f7;
+      }
+      .product-card:hover img {
+        transform: scale(1.02);
+      }
+      .product-label {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .contact-section {
+        padding: 80px 45px;
+        text-align: center;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .contact-section h2 {
+        font-size: 28px;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .full-width {
+        grid-column: span 2;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        outline: none;
+      }
+      .submit-btn {
+        background: #000;
+        color: white;
+        padding: 15px 60px;
+        border: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 30px;
+        text-transform: uppercase;
+      }
+
+      footer {
+        padding: 40px 45px;
+        background: #000;
+        color: white;
+        text-align: center;
+        font-size: 12px;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="promo-bar">
+      Customized corporate orders may take up to 3 weeks of delivery
+    </div>
+
+    <header>
+      <div class="top-bar">
+        <div>
+          <a href="signin.html">SIGN IN</a> |
+          <a href="tracking.html">TRACKING INFO</a>
+        </div>
+        <div>Step Into the Season - SHOP NOW</div>
+      </div>
+      <div class="main-header">
+        <div class="nav-links">
+          <a href="index.html">WOMEN</a>
+          <a href="index.html">MEN</a>
+        </div>
+        <a href="index.html" class="logo">J.</a>
+        <div class="user-actions">
+          <a href="javascript:void(0)">SEARCH</a>
+          <a href="cart.html">BAG (<span id="cart-count">0</span>)</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="slider-container">
+      <div class="slides" id="slide-track">
+        <div class="slide slide-1">
+          <div class="hero-text">
+            <h1>Festive</h1>
+            <p>Corporate Gifts</p>
+          </div>
+        </div>
+        <div class="slide slide-2">
+          <div class="hero-text">
+            <h1>Curated</h1>
+            <p>Gift Sets</p>
+          </div>
+        </div>
+      </div>
+      <div class="arrow prev" onclick="moveSlide(-1)">&#10094;</div>
+      <div class="arrow next" onclick="moveSlide(1)">&#10095;</div>
+    </div>
+
+    <h2 class="section-title">Corporate Gifts</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="images/placeholder.jpg" />
+        <div class="product-label">Business Gifts</div>
+      </div>
+      <div class="product-card">
+        <img src="images/placeholder.jpg" />
+        <div class="product-label">Festive Gifts</div>
+      </div>
+      <div class="product-card">
+        <img src="images/placeholder.jpg" />
+        <div class="product-label">Custom Gifts</div>
+      </div>
+      <div class="product-card">
+        <img src="images/placeholder.jpg" />
+        <div class="product-label">Gift Vouchers</div>
+      </div>
+    </div>
+
+    <section class="contact-section">
+      <h2>GET IN TOUCH</h2>
+      <div class="form-grid">
+        <input type="text" placeholder="Name*" />
+        <input type="text" placeholder="Organization Name" />
+        <input type="text" placeholder="Phone*" />
+        <input type="email" placeholder="Email*" />
+        <textarea
+          placeholder="Remarks / Notes"
+          rows="5"
+          class="full-width"
+        ></textarea>
+      </div>
+      <button class="submit-btn">Submit Request</button>
+    </section>
+
+    <footer>
+      <p>
+        © 2026 J. All Rights Reserved | Contact: corporate@junaidjamshed.com
+      </p>
+    </footer>
+
+    <script>
+      function updateBagCounter() {
+        let cart = JSON.parse(localStorage.getItem("j_cart")) || [];
+        document.getElementById("cart-count").innerText = cart.length;
+      }
+      window.addEventListener("load", updateBagCounter);
+
+      // Slider Logic
+      let index = 0;
+      const track = document.getElementById("slide-track");
+      function moveSlide(n) {
+        index += n;
+        if (index > 1) index = 0;
+        if (index < 0) index = 1;
+        track.style.transform = `translateX(-${index * 100}%)`;
+      }
+    </script>
+  </body>
+</html>
