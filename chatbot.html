@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATOM AI</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      body {
+        background: #000000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .chat-container {
+        width: 100%;
+        max-width: 450px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(249, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        height: 80vh;
+        overflow: hidden;
+      }
+      .chat-header {
+        background: #cf80be;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .chat-box {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .message {
+        padding: 12px 16px;
+        border-radius: 20px;
+        max-width: 80%;
+        line-height: 1.4;
+        font-size: 14px;
+      }
+      .user-msg {
+        background: #637493;
+        color: #fff;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+      .bot-msg {
+        background: #acacac;
+        color: #000;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+      }
+      /* --- NEW: Style for the typing indicator --- */
+      .loading {
+        font-style: italic;
+        color: #444;
+        opacity: 0.8;
+      }
+      .input-area {
+        display: flex;
+        border-top: 1px solid #eee;
+        padding: 15px;
+        background: #fff;
+      }
+      .input-area input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        outline: none;
+        font-size: 14px;
+      }
+      .input-area button {
+        background: #000;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-left: 10px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div class="chat-header">ATOM AI</div>
+      <div class="chat-box" id="chat-box">
+        <div class="message bot-msg">Hello! This is Atom, Farmaiye?</div>
+      </div>
+      <div class="input-area">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Type your message..."
+          autocomplete="off"
+        />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      const HF_API_KEY = "";
+
+      // FIX: Added the full endpoint path for the chat router
+      const MODEL_URL = "https://router.huggingface.co/v1/chat/completions";
+
+      async function sendMessage() {
+        const inputField = document.getElementById("user-input");
+        const chatBox = document.getElementById("chat-box");
+        const message = inputField.value.trim();
+
+        if (!message) return;
+
+        // Print the User's Message
+        const userDiv = document.createElement("div");
+        userDiv.className = "message user-msg";
+        userDiv.textContent = message;
+        chatBox.appendChild(userDiv);
+        inputField.value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Print the "Typing..." Indicator
+        const loadingDiv = document.createElement("div");
+        loadingDiv.className = "message bot-msg loading";
+        loadingDiv.id = "loading-msg";
+        loadingDiv.textContent = "Thora Sa Sabr, Kijiye...";
+        chatBox.appendChild(loadingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+          const response = await fetch(MODEL_URL, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${HF_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            //models that canbe used(Together AI):
+            //Qwen/Qwen2.5-7B-Instruct
+            //deepcogito/cogito-671b-v2.1-FP8
+            //meta-llama/Llama-3.3-70B-Instruct
+            //openai/gpt-oss-120b
+            //zai-org/GLM-5.2
+            //deepseek-ai/DeepSeek-V4-Pro
+
+            body: JSON.stringify({
+              model: "",
+              messages: [{ role: "user", content: message }],
+              max_tokens: 500,
+            }),
+          });
+
+          const data = await response.json();
+
+          // Remove the "Typing..." indicator now that the AI has replied
+          const loadingElement = document.getElementById("loading-msg");
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+
+          let botReply = "Sorry, I couldn't process that.";
+
+          // The Router sends the reply back in a slightly different format (inside "choices")
+          if (data && data.choices && data.choices.length > 0) {
+            botReply = data.choices[0].message.content.trim();
+          } else if (data.error) {
+            botReply = `API Error: ${data.error.message || data.error}`;
+          }
+
+          // Print the final Bot Reply
+          const botDiv = document.createElement("div");
+          botDiv.className = "message bot-msg";
+          botDiv.textContent = botReply;
+          chatBox.appendChild(botDiv);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (error) {
+          // Remove the "Typing..." indicator if there is an error
+          const loadingElement = document.getElementById("loading-msg");
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+
+          // Improved error reporting
+          const errorDiv = document.createElement("div");
+          errorDiv.className = "message bot-msg";
+          errorDiv.textContent = "System Error: " + error.message;
+          chatBox.appendChild(errorDiv);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      }
+
+      document
+        .getElementById("user-input")
+        .addEventListener("keypress", function (event) {
+          if (event.key === "Enter") {
+            sendMessage();
+          }
+        });
+    </script>
+  </body>
+</html>
